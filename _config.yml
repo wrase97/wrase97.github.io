@@ -1,4 +1,4 @@
 name: my website
-markdown: kramdown
+markdown: redcarpet
 
 theme: jekyll-theme-cayman
