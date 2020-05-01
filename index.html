@@ -16,7 +16,7 @@
 </head>
     <body>
         <div id="main">
-            <audio id="BGM" height="100" width="100">
+            <audio loop id="BGM" height="100" width="100">
                     <source src="file/whys.mp3" type="audio/mp3" />
                     <embed height="100" width="100" src="file/whys.mp3" />
             </audio>
@@ -41,7 +41,7 @@
                     </div>
                   </div>
                 <div id="clock-box">
-                    <span class="STYLE1"></span><font color="#33CC00">亲爱的，我喜欢你</font>
+                    <span class="STYLE1"></span><font color="#33CC00">亲爱的，我们在一起</font>
 <span class="STYLE1">已经是……</span>
                   <div id="clock"></div>
               </div>
@@ -105,12 +105,12 @@
         var seed = tree.seed;
         var foot = tree.footer;
         var hold = 1;
+        var BGM = $('#BGM')[0];
 
         canvas.click(function(e) {
             var offset = canvas.offset(), x, y;
             x = e.pageX - offset.left;
             y = e.pageY - offset.top;
-            $('#BGM')[0].play();
             if (seed.hover(x, y)) {
                 hold = 0; 
                 canvas.unbind("click");
@@ -142,6 +142,7 @@
 
         var growAnimate = eval(Jscex.compile("async", function () {
             do {
+                BGM.play();
     	        tree.grow();
                 $await(Jscex.Async.sleep(10));
             } while (tree.canGrow());
@@ -182,11 +183,11 @@
 
         var textAnimate = eval(Jscex.compile("async", function () {
 		    var together = new Date();
-		    together.setFullYear(2010,1 , 15); 			//时间年月日
-		    together.setHours(16);						//小时	
-		    together.setMinutes(53);					//分钟
+		    together.setFullYear(2019, 6, 13); 			//时间年月日
+		    together.setHours(23);						//小时	
+		    together.setMinutes(10);					//分钟
 		    together.setSeconds(0);					//秒前一位
-		    together.setMilliseconds(2);				//秒第二位
+		    together.setMilliseconds(0);				//秒第二位
 
 		    $("#code").show().typewriter();
             $("#clock-box").fadeIn(500);

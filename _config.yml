@@ -1,4 +1,0 @@
-name: my website
-markdown: kramdown
-kramdown:
-    math_engine: katex
