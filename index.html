@@ -110,7 +110,7 @@
             var offset = canvas.offset(), x, y;
             x = e.pageX - offset.left;
             y = e.pageY - offset.top;
-            $('#BGM').play();
+            $('#BGM')[0].play();
             if (seed.hover(x, y)) {
                 hold = 0; 
                 canvas.unbind("click");
