@@ -1,228 +1,52 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>给我的宝贝</title>	    
-    <link type="text/css" rel="stylesheet" href="./file/default.css">
-    <link rel="shortcut icon" href="./favicon.ico"/>
-    <link rel="bookmark" href="./favicon.ico" type="image/x-icon"　/>
-    <script type="text/javascript" src="./file/jquery.min.js"></script>
-    <script type="text/javascript" src="./file/jscex.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-parser.js"></script>
-    <script type="text/javascript" src="./file/jscex-jit.js"></script>
-    <script type="text/javascript" src="./file/jscex-builderbase.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async.min.js"></script>
-    <script type="text/javascript" src="./file/jscex-async-powerpack.min.js"></script>
-    <script type="text/javascript" src="./file/functions.js" charset="utf-8"></script>
-    <script type="text/javascript" src="./file/love.js" charset="utf-8"></script>
-    <style type="text/css">
-    </style>
-</head>
-
-<body>
-    <div id="main">
-        <audio id="BGM" loop preload="auto">
-            <source src="file/whys.mp3" type="audio/mp3"/>
-        </audio>
-        <div id="wrap">
-            <div id="text">
-                <div id="code"> <font color="#FF0000"> 
-<span class="say">亲爱的蜜桃酱🍑：</span><br><br>
-<span class="say">我爱你♥</span><br>
-<span class="say">十几年前可能只是小小的爱慕</span><br>
-<span class="say">但是我发现我越了解你，就越喜欢你</span><br>
-<span class="say">喜欢你的容貌身材</span><br>
-<span class="say">喜欢你的乐观活泼</span><br>
-<span class="say">喜欢你的坚持努力</span><br>
-<span class="say">喜欢你的傲娇自立</span><br>
-<span class="say">虽然我们也会吵架拌嘴</span><br>
-<span class="say">但每次冷静下来之后</span><br>
-<span class="say">我都觉得我们的关系更近一步</span><br>
-<span class="say">渐渐我看到了我们的变化</span><br>
-<span class="say">我越来越懂事</span><br>
-<span class="say">你也渐渐放下了自己的铠甲</span><br>
-<span class="say">这些可喜的变化让我们越来越幸福了</span><br>
-<span class="say">我会继续努力</span><br>
-<span class="say">证明自己是那个值得你托付一生的人</span><br>
-<span class="say">因为宝贝呀</span><br>
-<span class="say">我想永远永远和你在一起</span><br>
-<span class="say">永远永远</span><br>      </font>
-                        <br />
-                        <br />
-                    </p>
-                </div>
-                </div>
-            <div id="clock-box">
-                <span class="STYLE1"></span><font color="#FF66CC">宝贝，我们在一起</font>
-                <span class="STYLE1">已经是……</span>
-                <div id="clock"></div>
-            </div>
-            <canvas id="canvas" width="1100" height="680"></canvas>
-        </div>
-        
-    </div>
-
+<html>
+<head>
+<title>秘制小密室</title>
+<style>
+img{
+    width: auto;
+    height: auto;
+    max-width: 50%;
+    max-height: 50%;  
+}
+</style>
 <script>
-</script>
-
-<script>
-(function(){
-    var canvas = $('#canvas');
-    
-    if (!canvas[0].getContext) {
-        $("#error").show();
-        return false;        }
-
-    var width = canvas.width();
-    var height = canvas.height();        
-    canvas.attr("width", width);
-    canvas.attr("height", height);
-    var opts = {
-        seed: {
-            x: width / 2 - 20,
-            color: "rgb(190, 26, 37)",
-            scale: 2
-        },
-        branch: [
-            [535, 680, 570, 250, 500, 200, 30, 100, [
-                [540, 500, 455, 417, 340, 400, 13, 100, [
-                    [450, 435, 434, 430, 394, 395, 2, 40]
-                ]],
-                [550, 445, 600, 356, 680, 345, 12, 100, [
-                    [578, 400, 648, 409, 661, 426, 3, 80]
-                ]],
-                [539, 281, 537, 248, 534, 217, 3, 40],
-                [546, 397, 413, 247, 328, 244, 9, 80, [
-                    [427, 286, 383, 253, 371, 205, 2, 40],
-                    [498, 345, 435, 315, 395, 330, 4, 60]
-                ]],
-                [546, 357, 608, 252, 678, 221, 6, 100, [
-                    [590, 293, 646, 277, 648, 271, 2, 80]
-                ]]
-            ]] 
-        ],
-        bloom: {
-            num: 700,
-            width: 1080,
-            height: 650,
-        },
-        footer: {
-            width: 1200,
-            height: 5,
-            speed: 10,
-        }
+var failure = 0;
+function validateForm() {
+    var x = document.forms["myForm"]["fname"].value;
+    if (x != "123") {
+        alert("密码错误");
+        return false;
     }
+}
 
-    var tree = new Tree(canvas[0], width, height, opts);
-    var seed = tree.seed;
-    var foot = tree.footer;
-    var hold = 1;
-    var BGM = $('#BGM')[0];
-
-    canvas.click(function(e) {
-        var offset = canvas.offset(), x, y;
-        x = e.pageX - offset.left;
-        y = e.pageY - offset.top;
-        if (seed.hover(x, y)) {
-            hold = 0; 
-            canvas.unbind("click");
-            canvas.unbind("mousemove");
-            canvas.removeClass('hand');
-        }
-    }).mousemove(function(e){
-        var offset = canvas.offset(), x, y;
-        x = e.pageX - offset.left;
-        y = e.pageY - offset.top;
-        canvas.toggleClass('hand', seed.hover(x, y));
-    });
-
-    var seedAnimate = eval(Jscex.compile("async", function () {
-        seed.draw();
-        while (hold) {
-            $await(Jscex.Async.sleep(10));
-        }
-        while (seed.canScale()) {
-            seed.scale(0.95);
-            $await(Jscex.Async.sleep(10));
-        }
-        while (seed.canMove()) {
-            seed.move(0, 2);
-            foot.draw();
-            $await(Jscex.Async.sleep(10));
-        }
-    }));
-
-    var growAnimate = eval(Jscex.compile("async", function () {
-        do {
-            BGM.play();
-            tree.grow();
-            $await(Jscex.Async.sleep(10));
-        } while (tree.canGrow());
-    }));
-
-    var flowAnimate = eval(Jscex.compile("async", function () {
-        do {
-            tree.flower(2);
-            $await(Jscex.Async.sleep(10));
-        } while (tree.canFlower());
-    }));
-
-    var moveAnimate = eval(Jscex.compile("async", function () {
-        tree.snapshot("p1", 240, 0, 610, 680);
-        while (tree.move("p1", 500, 0)) {
-            foot.draw();
-            $await(Jscex.Async.sleep(10));
-        }
-        foot.draw();
-        tree.snapshot("p2", 500, 0, 610, 680);
-
-        // 会有闪烁不得意这样做, (＞﹏＜)
-        canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
-        canvas.css("background", "#ffe");
-        $await(Jscex.Async.sleep(300));
-        canvas.css("background", "none");
-    }));
-
-    var jumpAnimate = eval(Jscex.compile("async", function () {
-        var ctx = tree.ctx;
-        while (true) {
-            tree.ctx.clearRect(0, 0, width, height);
-            tree.jump();
-            foot.draw();
-            $await(Jscex.Async.sleep(25));
-        }
-    }));
-
-    var textAnimate = eval(Jscex.compile("async", function () {
-        var together = new Date();
-        together.setFullYear(2019, 6, 12); 			//时间年月日
-        together.setHours(23);						//小时	
-        together.setMinutes(10);					//分钟
-        together.setSeconds(0);					//秒前一位
-        together.setMilliseconds(0);				//秒第二位
-
-        $("#code").show().typewriter();
-        $("#clock-box").fadeIn(500);
-        while (true) {
-            timeElapse(together);
-            $await(Jscex.Async.sleep(1000));
-        }
-    }));
-
-    var runAsync = eval(Jscex.compile("async", function () {
-        $await(seedAnimate());
-        $await(growAnimate());
-        $await(flowAnimate());
-        $await(moveAnimate());
-
-        textAnimate().start();
-
-        $await(jumpAnimate());
-    }));
-
-    runAsync().start();
-})();
+function toggleTip(tip) {
+    var x = document.getElementById(tip);
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
 </script>
-</body>
+</head>
+<body>
+<h1 align="center">秘制小密室</h1>
+<p align="center">欢迎来到秘制小密室，下面你将解决四个密码，逃出密室。</p>
+<p align="center">下面是一个例子，你可以通过这个例子熟悉操作。</p>
+<p align="center">在如下密码框中输入密码，或者点击下方的提示按钮。这个例子中，正确的密码是123。</p>
+<p align="center">后面的谜题中，密码可能是数字或者字母。提示会对谜题的破解有所帮助，但是也可能降低你的游戏体验，因此请谨慎选择。每个提示的提示程度依次加深，因此需要顺次查看。再次点击提示按钮可以隐藏提示。</p>
 
+
+<form align="center" name="myForm" onsubmit="return validateForm()" action="basement.html" method="post">
+<input type="text" name="fname">
+<input type="submit" value="确定">
+</form>
+<button onclick="toggleTip('tip1')">提示1</button><button onclick="toggleTip('tip2')">提示2</button>
+<button onclick="toggleTip('answer')">答案</button>
+<hr>
+<div id="tip1" style="display: none"> 提示1：共三位数字。第一位是1 </div>
+<div id="tip2" style="display: none"> 提示2：前两位是12 </div>
+<div id="answer" style="display: none"> 答案：123 </div>
+
+</body>
 </html>
