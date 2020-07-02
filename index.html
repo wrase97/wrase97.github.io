@@ -1,52 +1,10 @@
-﻿<html>
-<head>
-<title>秘制小密室</title>
-<style>
-img{
-    width: auto;
-    height: auto;
-    max-width: 50%;
-    max-height: 50%;  
-}
-</style>
-<script>
-var failure = 0;
-function validateForm() {
-    var x = document.forms["myForm"]["fname"].value;
-    if (x != "123") {
-        alert("密码错误");
-        return false;
-    }
-}
-
-function toggleTip(tip) {
-    var x = document.getElementById(tip);
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
-</script>
-</head>
-<body>
-<h1 align="center">秘制小密室</h1>
-<p align="center">欢迎来到秘制小密室，下面你将解决四个密码，逃出密室。</p>
-<p align="center">下面是一个例子，你可以通过这个例子熟悉操作。</p>
-<p align="center">在如下密码框中输入密码，或者点击下方的提示按钮。这个例子中，正确的密码是123。</p>
-<p align="center">后面的谜题中，密码可能是数字或者字母。提示会对谜题的破解有所帮助，但是也可能降低你的游戏体验，因此请谨慎选择。每个提示的提示程度依次加深，因此需要顺次查看。再次点击提示按钮可以隐藏提示。</p>
-
-
-<form align="center" name="myForm" onsubmit="return validateForm()" action="basement.html" method="get">
-<input type="text" name="fname">
-<input type="submit" value="确定">
-</form>
-<button onclick="toggleTip('tip1')">提示1</button><button onclick="toggleTip('tip2')">提示2</button>
-<button onclick="toggleTip('answer')">答案</button>
-<hr>
-<div id="tip1" style="display: none"> 提示1：共三位数字。第一位是1 </div>
-<div id="tip2" style="display: none"> 提示2：前两位是12 </div>
-<div id="answer" style="display: none"> 答案：123 </div>
-
-</body>
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+  <body>
+    <main>
+    </main>
+  </body>
 </html>
