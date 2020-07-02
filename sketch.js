@@ -3,12 +3,8 @@ var walls;
 var wall_vx = -2;
 
 function setup() {
-  createCanvas(400, 400);
-  bird = new Bird(100,200);
-  var delta = 430.0/3;
-  walls = [new Wall(400,random(0,height-100)),
-    new Wall(400+delta,random(0,height-100)),
-    new Wall(400+2*delta,random(0,height-100))];
+  createCanvas(windowWidth, windowHeight);
+  initialize();
 }
 function draw() {
   background(0);
@@ -17,7 +13,7 @@ function draw() {
     stroke(255);
     textSize(50);
     textAlign(CENTER, BASELINE)
-    text('You died!', 200,200);
+    text('You died!', windowWidth/2,windowHeight/2);
     return;
   }
   bird.draw();
@@ -31,7 +27,17 @@ function draw() {
   // walls[0].update();
   // walls[0].draw();
 }
+function initialize() {
+  bird = new Bird(width/3,height/2);
+  var delta = (width+30.0)/3;
+  walls = [new Wall(width,random(0,height-100)),
+    new Wall(width+delta,random(0,height-100)),
+    new Wall(width+2*delta,random(0,height-100))];
+}
 function mouseClicked() {
+  if (bird.dead) {
+    initialize();
+  }
   bird.up();
 }
 var g = .05;
