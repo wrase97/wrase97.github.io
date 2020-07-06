@@ -5,6 +5,7 @@ function setup() {
   createCanvas(w, w);
   background(0);
   stroke(255);
+  strokeWeight(0.5);
   translate(width/2,height/2);
   push();
   translate(0,-s*sqrt(3)*height);
