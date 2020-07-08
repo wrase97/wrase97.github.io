@@ -5,6 +5,8 @@ const B=2;
 const X=3;
 var ctx;
 var game;
+var chkBox;
+var btn;
 function preload()
 {
   puppy = loadImage('puppy.jpg');
@@ -12,13 +14,20 @@ function preload()
 }
 function setup()
 {
-  createCanvas(500,300);
-  ctx = createDiv('电脑是🐶，先走，你是🐰，后走。<br>轮到电脑的时候随便点一下，轮到你的时候想走哪点哪。<br>重新开始请刷新。');
+  var canvas = createCanvas(500,300);
+  canvas.mouseClicked(nm);
+  ctx = createDiv('电脑是🐶，先走，你是🐰，后走。<br>轮到电脑的时候随便点一下，轮到你的时候想走哪点哪。');
+  chkBox = createCheckbox('全自动', false);
+  btn = createButton('再来再来');
+  btn.mouseClicked(refresh);
   game = new Game();
 }
-function mouseClicked()
+function refresh() {
+  game = new Game();
+}
+function nm()
 {
-  if (game.nextTurn == B) {
+  if (!chkBox.checked() && game.nextTurn == B) {
     var ii = round((mouseY - (150-w))/w);
     var jj = round((mouseX - 40)/w);
 
