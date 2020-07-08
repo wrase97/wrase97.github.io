@@ -87,6 +87,7 @@ class Game {
   constructor() {
     this.board = [[X,P,0,0,X],[P,0,0,0,B],[X,P,0,0,X]];
     this.nextTurn = P;
+    this.stepsRemain = 30;
   }
 
 
@@ -173,6 +174,9 @@ class Game {
       || this.board[2][1] == B;
   }
 
+  puppyWins() {
+    return this.stepsRemain <= 0;
+  }
   score(depth, side) {
     if (depth == 0) {
       return 5-this.findBunny()[1];
@@ -182,6 +186,8 @@ class Game {
     var sc;
     if (game.bunnyWins()) {
       return 10;
+    } else if (game.puppyWins()) {
+      return -10;
     }
     if(side == P) // minimize
     {
@@ -198,7 +204,7 @@ class Game {
         sc = max(sc, game.score(depth-1, B+P-side));
         game.undo(ntp[idx]);      }
     }
-    return sc;
+    return 0.9*sc;
 
   }
 
@@ -212,7 +218,10 @@ class Game {
       ctx.html('Bunny wins.');
 
     }
-    if (this.nextTurnAvailable(this.nextTurn).length == 0) {
+    if (this.stepsRemain <= 0)
+    {
+      ctx.html('Puppy wins.')
+    } else if (this.nextTurnAvailable(this.nextTurn).length == 0) {
       if (this.nextTurn == P) {
         console.log('bunny wins')
         ctx.html('Bunny wins.');
@@ -221,17 +230,23 @@ class Game {
         ctx.html('Puppy wins.');
 
       }
+    } else {
+      ctx.html('还剩'+this.stepsRemain+'步');
     }
   }
 
   try(mv) {
+    this.stepsRemain -= 1;
     let tmp = this.board[mv[0]][mv[1]];
     this.board[mv[0]][mv[1]] = this.board[mv[2]][mv[3]];
     this.board[mv[2]][mv[3]] = tmp;
   }
 
   undo(mv) {
-    this.try(mv);
+    this.stepsRemain += 1;
+    let tmp = this.board[mv[0]][mv[1]];
+    this.board[mv[0]][mv[1]] = this.board[mv[2]][mv[3]];
+    this.board[mv[2]][mv[3]] = tmp;
   }
 
   show() {
