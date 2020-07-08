@@ -180,12 +180,9 @@ class Game {
   
   bunnyWins() {
     return this.board[1][0] == B || this.board[0][1] == B 
-      || this.board[2][1] == B;
+      || this.board[2][1] == B || this.stepsRemain <= 0;
   }
 
-  puppyWins() {
-    return this.stepsRemain <= 0;
-  }
   score(depth, side) {
     if (depth == 0) {
       return 5-this.findBunny()[1];
@@ -195,8 +192,6 @@ class Game {
     var sc;
     if (game.bunnyWins()) {
       return 10;
-    } else if (game.puppyWins()) {
-      return -10;
     }
     if(side == P) // minimize
     {
@@ -229,7 +224,7 @@ class Game {
     }
     if (this.stepsRemain <= 0)
     {
-      ctx.html('Puppy wins.')
+      ctx.html('Bunny wins.')
     } else if (this.nextTurnAvailable(this.nextTurn).length == 0) {
       if (this.nextTurn == P) {
         console.log('bunny wins')
