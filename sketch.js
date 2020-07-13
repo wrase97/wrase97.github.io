@@ -19,11 +19,19 @@ function preload()
 }
 function setup()
 {
-  var m = min(displayHeight,displayWidth);
+  var m = min(windowWidth,windowHeight);
+  // var m = 1000;
   cvs = createCanvas(m, m);
+  // createDiv(m*0.2);
+  // createDiv(displayHeight);
+  // createDiv(windowWidth);
+  // createDiv(windowHeight);
+
   triggerBtn = createButton('开始');
-  triggerBtn.position(cvs.position().x+m*0.05,cvs.position().y+m*.05);
-  triggerBtn.size(m*0.1,m*.05);
+  // triggerBtn.position(cvs.position().x+m*0.02,cvs.position().y+m*.02);
+  var sze = m;
+  triggerBtn.size(sze,sze*.618);
+  triggerBtn.style('font-size',round(sze*.8/2)+'px');
   triggerBtn.mousePressed(trigger);
 }
 function trigger()
@@ -31,7 +39,7 @@ function trigger()
   if (status == STOP)
   {
     status = START;
-    triggerBtn.html('停！');
+    triggerBtn.html('停!');
     v = 0.2;
     selected = -1;
   } else if (status == START) {
