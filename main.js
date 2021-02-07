@@ -80,7 +80,12 @@ var render = Render.create({
 });
 var next = new_ball(w/2, -1, 0, true);    // do not colliside.
 var nextq = new_ball(w/2, -1, 1, true);    // do not colliside.
-var ground = Bodies.rectangle(w/2, h, w*1.1, h*0.1, { friction: 0.01, isStatic: true });
+var ground = Bodies.rectangle(w/2, h, w*1.1, h*0.1, { friction: 0.01, isStatic: true,
+    render: {sprite: {
+        texture: "img/ground.jpg",
+        xScale: w/5590,
+        yScale: h*0.1/935}}
+});
 var wall_left = Bodies.rectangle(-10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
 var wall_right = Bodies.rectangle(w+10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
 
@@ -96,13 +101,10 @@ var gridBackground = Bodies.rectangle(w/2, .95*h/2, w, .95*h, {
     }
 });
 for (let i = 0; i < 8; i++) {
-    World.add(engine.world, new_ball(0,0,i, true));
+    World.add(engine.world, new_ball(-w,-h,i, true));
     
 }
-World.add(engine.world, gridBackground);
-
-// add all of the bodies to the world
-World.add(engine.world, [next, wall_left, wall_right, ground]);
+World.add(engine.world, [ground, wall_left, wall_right, gridBackground, next]);
 
 engine.world.gravity.scale = gravity_scale
 var mouse = Matter.Mouse.create(render.canvas),
