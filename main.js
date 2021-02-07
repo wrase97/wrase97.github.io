@@ -8,20 +8,29 @@ var Engine = Matter.Engine,
 
 // create an engine
 var engine = Engine.create();
-
-function new_ball(x,y, rank, isStatic, mask) {
-    var r =ball_base_size*Math.pow(2, rank/2);
+ball_sizes = [1, 1.414, 2, 2.1, 2.1*1.414, 2.1*1.414*1.3, 2.1*1.414*1.3*1.3,2.1*1.41*1.3*1.3*1.414]
+function new_ball(x,y, rank, isStatic=false, vx=0, vy=0) {
+    var r =ball_sizes[rank] * ball_scale;
     if (y<0)
     {
         y = ceil - r;
     }
+    if (isStatic)
+    {
+        mask = 0;
+    }
+    else
+    {
+        mask = -1;
+    }
+
     var res = Bodies.circle(x, y, r, {
+        velocity: {x: vx, y:vy},
         isStatic: isStatic,
         collisionFilter:{mask: mask},
-        friction: 0.05,
-        frictionAir: 0,
-        restitution: 0.2,
-        label: {name: "ball", rank: rank},
+        friction: 0.03,
+        restitution: 0.1,
+        label: {rank: rank},
         render: {sprite: {
             texture: "./img/"+rank+".png",
             xScale: 2*r/500,
@@ -36,13 +45,11 @@ function randomRank() {
     var r = Math.random()*sum;
     for (let i = 0; i < n; i++) {
         if (r<n-i){
-            console.log(i);
             return i;
         } else {
             r -= n-i;
         }
     }
-    console.log('error');
     return maxRank;
 }
 
@@ -52,11 +59,17 @@ var dh = document.body.clientHeight;
 var h=Math.min(dh, dw*2);
 var w=h/2;
 var maxRank = 0;
-var ball_base_size=w/30;
-var ceil = h*50/600;
+var ball_scale = w/20;
+var gravity_scale = 0.001*h/800;
+var ceil = h/5;
+
+var div = document.getElementById("div");
+div.style.width=w;
+div.style.height=h;
+
 // create a renderer
 var render = Render.create({
-    element: document.body,
+    element: div,
     engine: engine,
     options: {
         width: w,
@@ -65,14 +78,33 @@ var render = Render.create({
 
     }
 });
-var next = new_ball(w/2, -1, 0, true, 0);    // do not colliside.
-var ground = Bodies.rectangle(w/2, h+10, w*1.1, 20, { friction: 0.01, isStatic: true });
+var next = new_ball(w/2, -1, 0, true);    // do not colliside.
+var nextq = new_ball(w/2, -1, 1, true);    // do not colliside.
+var ground = Bodies.rectangle(w/2, h, w*1.1, h*0.1, { friction: 0.01, isStatic: true });
 var wall_left = Bodies.rectangle(-10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
 var wall_right = Bodies.rectangle(w+10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
+
+var gridBackground = Bodies.rectangle(w/2, .95*h/2, w, .95*h, {
+    isStatic: true,
+    isSensor: true,
+    render: {
+        sprite: {
+            texture: "img/bg2.jpg",
+            xScale: w/405,
+            yScale: h*.95/720
+        }
+    }
+});
+for (let i = 0; i < 8; i++) {
+    World.add(engine.world, new_ball(0,0,i, true));
+    
+}
+World.add(engine.world, gridBackground);
+
 // add all of the bodies to the world
 World.add(engine.world, [next, wall_left, wall_right, ground]);
 
-
+engine.world.gravity.scale = gravity_scale
 var mouse = Matter.Mouse.create(render.canvas),
     mouseConstraint = Matter.MouseConstraint.create(engine, {
         mouse: mouse,
@@ -99,13 +131,12 @@ Events.on(mouseConstraint, 'mouseup', function(event) {
             // y = event.mouse.position.y,
             // console.log(next);
             // Body.set(next,{collisionFilter:{catagory:1, mask:0xffffffff, group:0}, isStatic: false});
-            ball = new_ball(x, -1, next.label.rank, false, -1);
-        console.log(ball);
+            ball = new_ball(x, -1, next.label.rank);
         // Body.setStatic(next, false);
         World.add(engine.world, ball);
 
         World.remove(engine.world, next);
-        next = new_ball(w/2, -1, randomRank(), true, 0);
+        next = new_ball(w/2, -1, randomRank(), true);
         World.add(engine.world, next);
 
 
@@ -120,12 +151,16 @@ Events.on(engine, 'collisionStart', function(event) {
         if (pair.bodyA.label.rank==pair.bodyB.label.rank && pair.bodyA.label.rank < 7) {
             var x = (pair.bodyA.position.x + pair.bodyB.position.x)*0.5;
             var y = (pair.bodyA.position.y + pair.bodyB.position.y)*0.5;
-            var ball =new_ball(x,y,pair.bodyA.label.rank+1, false, -1);
-
+            var vx = (pair.bodyA.velocity.x + pair.bodyB.velocity.x)*0.5;
+            var vy = (pair.bodyA.velocity.y + pair.bodyB.velocity.y)*0.5;
+            var ball =new_ball(x,y,pair.bodyA.label.rank+1, false, vx, vy);
+            // Body.setVelocity(ball, v);
             World.remove(engine.world, [pair.bodyA, pair.bodyB]);
+            pair.bodyA.label.rank=-1; // to avoid multiple match for the same ball.
+            pair.bodyB.label.rank=-1;
             World.add(engine.world, ball);
             // console.log(ball);
-            console.log(ball.label.rank);
+            // console.log(ball.label.rank);
 
             maxRank = Math.min(4, Math.max(maxRank, ball.label.rank));
         }

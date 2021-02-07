@@ -5668,7 +5668,7 @@ var Mouse = __webpack_require__(14);
 
         image = render.textures[imagePath] = new Image();
         image.src = imagePath;
-
+        console.log(imagePath);
         return image;
     };
 
