@@ -1,19 +1,20 @@
+
 // module aliases
 var Engine = Matter.Engine,
     Render = Matter.Render,
     World = Matter.World,
     Events = Matter.Events,
-    Bodies = Matter.Bodies;
-    Body = Matter.Body
+    Bodies = Matter.Bodies,
+    Body = Matter.Body;
 
 // create an engine
 var engine = Engine.create();
-ball_sizes = [1, 1.414, 2, 2.1, 2.1*1.414, 2.1*1.414*1.3, 2.1*1.414*1.3*1.3,2.1*1.41*1.3*1.3*1.414]
+ball_sizes = [1, 1.53, 2.04, 2.29, 2.87, 3.49, 3.52, 4.38, 4.87, 8.11, 8.11]
 function new_ball(x,y, rank, isStatic=false, vx=0, vy=0) {
     var r =ball_sizes[rank] * ball_scale;
     if (y<0)
     {
-        y = ceil - r;
+        y = ceil;
     }
     if (isStatic)
     {
@@ -25,7 +26,7 @@ function new_ball(x,y, rank, isStatic=false, vx=0, vy=0) {
     }
 
     var res = Bodies.circle(x, y, r, {
-        velocity: {x: vx, y:vy},
+        // slop:0.0,
         isStatic: isStatic,
         collisionFilter:{mask: mask},
         friction: 0.03,
@@ -36,6 +37,7 @@ function new_ball(x,y, rank, isStatic=false, vx=0, vy=0) {
             xScale: 2*r/500,
             yScale: 2*r/500}}}
         );
+    Body.setVelocity(res, {x: vx, y:vy})
     return res;
 };
 
@@ -59,9 +61,9 @@ var dh = document.body.clientHeight;
 var h=Math.min(dh, dw*2);
 var w=h/2;
 var maxRank = 0;
-var ball_scale = w/20;
+var ball_scale = w/750*55/2;
 var gravity_scale = 0.001*h/800;
-var ceil = h/5;
+var ceil = h*0.15;
 
 var div = document.getElementById("div");
 div.style.width=w;
@@ -80,7 +82,7 @@ var render = Render.create({
 });
 var next = new_ball(w/2, -1, 0, true);    // do not colliside.
 var nextq = new_ball(w/2, -1, 1, true);    // do not colliside.
-var ground = Bodies.rectangle(w/2, h, w*1.1, h*0.1, { friction: 0.01, isStatic: true,
+var ground = Bodies.rectangle(w/2, 0.95*h, w*1.1, h*0.1, { friction: 0.01, isStatic: true,
     render: {sprite: {
         texture: "img/ground.jpg",
         xScale: w/5590,
@@ -89,18 +91,18 @@ var ground = Bodies.rectangle(w/2, h, w*1.1, h*0.1, { friction: 0.01, isStatic: 
 var wall_left = Bodies.rectangle(-10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
 var wall_right = Bodies.rectangle(w+10, h/2, 20, h*1.1, {friction: 0.01, isStatic: true});
 
-var gridBackground = Bodies.rectangle(w/2, .95*h/2, w, .95*h, {
+var gridBackground = Bodies.rectangle(w/2, .9*h/2, w, .9*h, {
     isStatic: true,
     isSensor: true,
     render: {
         sprite: {
             texture: "img/bg2.jpg",
             xScale: w/405,
-            yScale: h*.95/720
+            yScale: h*.9/720
         }
     }
 });
-for (let i = 0; i < 8; i++) {
+for (let i = 0; i < 9; i++) {
     World.add(engine.world, new_ball(-w,-h,i, true));
     
 }
@@ -133,7 +135,8 @@ Events.on(mouseConstraint, 'mouseup', function(event) {
             // y = event.mouse.position.y,
             // console.log(next);
             // Body.set(next,{collisionFilter:{catagory:1, mask:0xffffffff, group:0}, isStatic: false});
-            ball = new_ball(x, -1, next.label.rank);
+            ball = new_ball(x, -1, next.label.rank, false, 0, h/80);
+            console.log(ball);
         // Body.setStatic(next, false);
         World.add(engine.world, ball);
 
@@ -150,7 +153,7 @@ Events.on(engine, 'collisionStart', function(event) {
     // change object colours to show those starting a collision
     for (var i = 0; i < pairs.length; i++) {
         var pair = pairs[i];
-        if (pair.bodyA.label.rank==pair.bodyB.label.rank && pair.bodyA.label.rank < 7) {
+        if (pair.bodyA.label.rank==pair.bodyB.label.rank && pair.bodyA.label.rank < 8) {
             var x = (pair.bodyA.position.x + pair.bodyB.position.x)*0.5;
             var y = (pair.bodyA.position.y + pair.bodyB.position.y)*0.5;
             var vx = (pair.bodyA.velocity.x + pair.bodyB.velocity.x)*0.5;
